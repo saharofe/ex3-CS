@@ -155,7 +155,11 @@ run_func:
     movb (%r12), %sil
     leaq 1(%r12), %rdx
     movq $0, %rax
+    push %r13
+    push %r12
     call printf
+    pop %r12
+    pop %r13
     movq $message_54, %rdi #call printf with (massage, len, string)
     xorq %rsi, %rsi
     movb (%r13), %sil

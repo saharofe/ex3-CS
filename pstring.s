@@ -1,6 +1,5 @@
-    .file "pstring.s"
-    .data
-    .section    .rodata
+.file "pstring.s"
+.section .rodata
 error: .string "invalid input!\n"  #error string for printf
     .text
 .global pstrlen

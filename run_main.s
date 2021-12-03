@@ -1,9 +1,8 @@
-    .file "run_main.s"
-    .data
-    .section    .rodata
-format_int1: .string "%d"
-format_string: .string "%s"
-    .text
+.file "run_main.s"
+.section .rodata
+    format_int1: .string "%d"
+    format_string: .string "%s"
+.text
 .global run_main
     .type   run_main, @function
 run_main:

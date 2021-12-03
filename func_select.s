@@ -1,6 +1,5 @@
-    .file "func_select.s"
-    .data
-    .section    .rodata
+.file "func_select.s"
+.section .rodata
        .align 8
     .switch_case:
     .quad .Op50 #Op = 50
@@ -23,7 +22,7 @@ error_op: .string "invalid option!\n"
 format_int: .string "%d"
 format_char: .string " %c"
 
-    .text
+.text
 .global run_func
     .type   run_func, @function
 

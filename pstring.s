@@ -30,7 +30,7 @@ replaceChar:
     movq %rsp, %rbp
     push %r10
     movb (%rdi), %cl # move to %cl the pstring len
-    xorb %r8b, %r8b   # %r8b = 0
+    xorq %r8, %r8   # %r8b = 0
     movb $1, %r8b     # %r8b = 1
     cmpb %r8b, %cl    # if counter <= len
     jge .while_1
@@ -62,7 +62,7 @@ swapCase:
     movq %rsp, %rbp
     push %r10
     movb (%rdi), %cl    #cl = len
-    xorb %r8b, %r8b     #%r8b = 0 <- counter
+    xorq %r8, %r8     #%r8b = 0 <- counter
     jmp .before_while_2
 .while_2:
     movb (%rdi, %r8, 1), %r9b
@@ -119,6 +119,7 @@ pstrijcpy:
     jg .error_1
     cmpb (%rsi), %cl   # if len_of_src < j
     jg .error_1
+    xorq %r8, %r8
     movb %dl, %r8b    # counter = i
 .before_while_3:
     addb $1, %r8b
@@ -156,6 +157,7 @@ pstrijcmp:
     jg .error_2
     cmpb (%rsi), %cl   # if len_of_pstr2 < j
     jg .error_2
+    xorq %r8, %r8
     movb %dl, %r8b     # counter = i
 .before_while_4:
     addb $1, %r8b

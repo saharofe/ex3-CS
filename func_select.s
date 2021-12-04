@@ -1,5 +1,6 @@
+#   209275114 Sahar Rofe
 .file "func_select.s"
-.section .rodata
+.section .rodata               #jump table
        .align 8
     .switch_case:
     .quad .Op50 #Op = 50
@@ -13,6 +14,7 @@
     .quad .noOp # 58
     .quad .noOp # 59
     .quad .Op50 #Op = 60
+#massages for all the options for printf and scanf
 message_50_60: .string "first pstring length: %d, second pstring length: %d\n"
 message_52: .string "old char: %c, new char: %c, first string: %s, second string: %s\n"
 message_53: .string "length: %d, string: %s\n"
@@ -26,21 +28,25 @@ format_char: .string " %c"
 .global run_func
     .type   run_func, @function
 
+#the arguments
 #pstr1 -> %rdi, pstr2 -> %rsi, oprion -> %rdx
 run_func:
+    #check the option
     push %rbp
     movq %rsp, %rbp
-    cmp $50, %rdx
+    cmp $50, %rdx     #check the option
     jl .noOp
     cmp $60, %rdx
     jg .noOp
     sub $50, %rdx
-    jmp *.switch_case(,%rdx,8)
+    jmp *.switch_case(,%rdx,8)   #send to the apropriate label
 .noOp:
-    movq $error_op, %rdi
+    #print error
+    movq $error_op, %rdi         #error
     call printf
     jmp .done
 .Op50:
+    #save registers
     push %r12
     push %r13
     push %rdi
@@ -48,26 +54,32 @@ run_func:
     call pstrlen
     movq %rax, %r12     #r12 <- len pstr1
     pop %rsi
+    #argument to pstrlen
     movq %rsi, %rdi
     call pstrlen
     movq %rax, %r13     #r13 <- len pstr2
+    #arguments to printf
     movq $message_50_60, %rdi
     movq %r12, %rsi
     movq %r13, %rdx
     movq $0, %rax
     call printf
+    #registers that I had saved
     pop %rdi
     pop %r13
     pop %r12
     jmp .done
 .Op52:
+    #save value
     push %rsi
     push %rdi
     subq $16, %rsp
+    #prapere scanf
     movq $format_char, %rdi
     movq %rsp, %rsi
     movq $0, %rax
     call scanf
+    #save the result
     pop %rdi
     pop %rsi
     push %rdi
@@ -81,9 +93,10 @@ run_func:
     pop %rdx         # newChar -> %rdx
     pop %rsi         # oldChar -> %rsi
     pop %rdi         # pstr1 -> %rdi
-    push %rdx
+    push %rdx        #for saving the registers
     push %rsi
     call replaceChar
+    #save values
     pop %rsi
     pop %rdx
     pop %rdi
@@ -91,19 +104,22 @@ run_func:
     push %rsi
     push %rdx
     call replaceChar
-    pop %rdx
+    pop %rdx          #prepre printf
     pop %rsi
     pop %rcx
     movq %rax, %r8
+    #send the adress of the stert of the string
     addq $1, %rcx
     addq $1, %r8
     movq $message_52, %rdi
     call printf
     jmp .done
 .Op53:
+    #save registers
     push %rsi
     push %rdi
     subq $16, %rsp
+    #aruments to scanf
     movq $format_int, %rdi
     movq %rsp, %rsi
     movq $0, %rax
@@ -150,7 +166,7 @@ run_func:
     movq %rsi, %rdi
     call swapCase # pstr2 in rdi
     movq %rax, %r13
-    movq $message_54, %rdi #call printf with (massage, len, string)
+    movq $message_54, %rdi  #call printf with (massage, len, string)
     xorq %rsi, %rsi
     movb (%r12), %sil
     leaq 1(%r12), %rdx
@@ -172,7 +188,7 @@ run_func:
 .Op55:
     push %rsi
     push %rdi
-    subq $16, %rsp
+    subq $16, %rsp          #prepare scanf
     movq $format_int, %rdi
     movq %rsp, %rsi
     movq $0, %rax
